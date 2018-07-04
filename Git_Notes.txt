@@ -1,8 +1,21 @@
 1.文本编辑的格式最好用UTF-8 without BOM编码，所有语言使用同一种编码，既没有冲突，又被所有平台所支持。
 2.千万不要使用Windows自带的记事本编辑任何文本文件。原因是Microsoft开发记事本的团队使用了一个非常弱智的行为来保存UTF-8编码的文件，他们自作聪明地在每个文件开头添加了0xefbbbf（十六进制）的字符，你会遇到很多不可思议的问题，比如，网页第一行可能会显示一个“?”，明明正确的程序一编译就报语法错误，等等。
 3.建议下载Notepad++代替记事本，不但功能强大，而且免费！记得把Notepad++的默认编码设置为‘UTF-8 without BOM’即可：
-4.创建文件夹
-$ mkdir learngit
-$ cd learngit
-$ pwd
-/Users/michael/learngit
+4.创建版本库，这个仓库位于/Users/michael/learngit：
+	$ mkdir learngit
+	$ cd learngit
+	$ pwd
+	/Users/michael/learngit
+5.通过git init命令把这个目录变成Git可以管理的仓库
+	$ git init
+	Initialized empty Git repository in /Users/michael/learngit/.git/
+6.添加到缓存并提交到仓库（多个add操作后，可一次性commt更新）：
+	$ git add file1.txt
+	$ git add file2.txt file3.txt
+	$ git commit -m "add 3 files."
+7.查看历史记录：
+	$ git log 
+	或者 
+	$ git log --pretty=oneline   // 此命令输出信息较少
+8.回退到之前的版本：
+	$ git reset --hard HEAD^ // 回退到上一版本，HEAD^^（回退到上上一个版本）......HEAD~100（回退到往上100个版本）
