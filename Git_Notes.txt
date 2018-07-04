@@ -13,9 +13,84 @@
 	$ git add file1.txt
 	$ git add file2.txt file3.txt
 	$ git commit -m "add 3 files."
-7.查看历史记录：
+7.查看提交历史记录（只显示有效的历史版本，不能查看历史提交的命令）：
 	$ git log 
 	或者 
-	$ git log --pretty=oneline   // 此命令输出信息较少
+	$ git log --pretty=oneline		// 此命令输出信息较少
 8.回退到之前的版本：
-	$ git reset --hard HEAD^ // 回退到上一版本，HEAD^^（回退到上上一个版本）......HEAD~100（回退到往上100个版本）
+		$ git reset --hard HEAD^ 		// 回退到上一版本，HEAD^^（回退到上上一个版本）......HEAD~100（回退到往上100个版本）
+	回到未来的版本：
+		$ git reset --hard 1094a		// 1094a为版本号，只需要知道版本号前几位，Git会自动去找。
+	查看命令历史的记录(通过唯一的版本号，可回退或前进到任一历史版本)：
+		$ git reflog
+			e475afc HEAD@{1}: reset: moving to HEAD^
+			1094adb (HEAD -> master) HEAD@{2}: commit: append GPL
+			e475afc HEAD@{3}: commit: add distributed
+			eaadf4e HEAD@{4}: commit (initial): wrote a readme file
+9.查看文件内容：
+	$ cat readme.txt
+10.通过命令查看工作区的状态：
+	$ git status    // 可查看工作区的文件是否修改，是否需要add或者commit，以及是否新增文本文件
+	  工作区和暂存区：
+			工作区：/Users/michael/learngit文件夹内
+			版本库：工作区有一个隐藏目录.git，是Git的版本库。Git的版本库里存了很多东西，其中最重要的就是称为stage（或者叫index）的暂存区，还有Git为我们自动创建的第一个分支master，以及指向master的一个指针叫HEAD。
+			工作区 → add到暂存区（stage） → commit到分支（master或者其他分支）
+		管理修改
+			1.查看工作区和版本库里面最新版本的区别：
+				$ git diff HEAD -- readme.txt
+		撤销修改
+			1.让工作区的文件回到最近一次git commit或git add时的状态（回到最近一次版本库或暂存区的内存，暂存区优先）
+				$ git checkout -- readme.txt
+			2.用命令把提交到暂存区的内容撤销掉（unstage）,重新放回工作区
+				$ git reset HEAD readme.txt
+			3.如果需撤销提交到版本库的内容，可利用版本回退的方式（仅限于本地版本库，如果推送到远程，就没法了）
+			小结：
+				场景1：当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令git checkout -- file。
+				场景2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，第一步用命令git reset HEAD <file>，就回到了场景1，第二步按场景1操作。
+				场景3：已经提交了不合适的修改到版本库时，想要撤销本次提交，参考版本回退一节，不过前提是没有推送到远程库。
+		删除文件
+			1.删除工作区文件
+				$ rm test.txt
+			2.执行第一步后，输入$ git status命令，可查看哪些文件被删除了，工作区和版本库就不一致了，有如下两种操作：
+				①删除版本库的文件
+					$ git rm test.txt
+				②删错了,需恢复工作区的文件（恢复为最新的版本库文件）
+					$ git checkout -- text,txt
+			小结
+				命令git rm用于删除一个文件。如果一个文件已经被提交到版本库，那么你永远不用担心误删，但是要小心，你只能恢复文件到最新版本，你会丢失最近一次提交后你修改的内容。
+	远程仓库
+		创建GitHub
+			1.自己搭建一台运行Git的服务器或者托管到GitHub网站上
+			2.本地Git仓库和GitHub仓库之间的传输是通过SSH加密的
+				①创建SSH Key
+					$ ssh-keygen -t rsa -C "tanzhengemail@gmail.com"				// 用户主目录里找到.ssh目录，里面有id_rsa(私钥)和id_rsa.pub(公钥)，
+				②登陆GitHub，打开“Account settings”，“SSH Keys”页面：
+					然后，点“Add SSH Key”，填上任意Title，在Key文本框里粘贴id_rsa.pub文件的内容：点“Add Key”，你就应该看到已经添加的Key：
+		添加远程库（本地创建了一个Git仓库后，又想在GitHub创建一个Git仓库，并且让这两个仓库进行远程同步，这样，GitHub上的仓库既可以作为备份，又可以让其他人通过该仓库来协作）
+			1.首先，登陆GitHub，然后，在右上角找到“Create a new repo”按钮，创建一个新的仓库：
+			2.在Repository name填入learngit，其他保持默认设置，点击“Create repository”按钮，就成功地创建了一个新的Git仓库：
+			3.在本地的learngit仓库下运行命令：$ git remote add origin git@github.com:one-twothreefourfive/learngit.git
+			4.把本地库当前分支master的所有内容推送到远程库上：$ git push -u origin master
+			5.第一次推送后，后面的推送命令可省略-u：git push origin master
+			6.SSH警告：当你第一次使用Git的clone或者push命令连接GitHub时，会得到一个警告：
+				The authenticity of host 'github.com (xx.xx.xx.xx)' can't be established.
+				RSA key fingerprint is xx.xx.xx.xx.xx.
+				Are you sure you want to continue connecting (yes/no)?
+				确认SSH钥匙并输入yes回车即可。
+			小结：
+				要关联一个远程库，使用命令git remote add origin git@server-name:path/repo-name.git；
+				关联后，使用命令git push -u origin master第一次推送master分支的所有内容；
+				此后，每次本地提交后，只要有必要，就可以使用命令git push origin master推送最新修改；
+		从远程库克隆
+			1.首先，登陆GitHub，创建一个新的仓库，名字叫gitskills：（勾选Initialize this repository with a README）
+			2.远程库已经准备好了，下一步是用命令git clone克隆一个本地库：$ git clone git@github.com:michaelliao/gitskills.git
+			3.进入gitkills目录查看克隆文件：
+				$ cd gitskills
+				$ ls
+					README.md
+			4.多个人协作开发，那么每个人各自从远程克隆一份GitHub给出的地址不止一个，还可以用https://github.com/michaelliao/gitskills.git这样的地址（传输协议分为：git://（ssh协议），https://（https协议）等其他协议）。
+			小结：
+				要克隆一个仓库，首先必须知道仓库的地址，然后使用git clone命令克隆。
+				Git支持多种协议，包括https，但通过ssh支持的原生git协议速度最快。
+	分支管理
+		
