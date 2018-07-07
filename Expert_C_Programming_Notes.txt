@@ -147,27 +147,76 @@
 			cout<<(void*)p<<endl<<a<<endl;
 			cout<<pa<<endl;
 		}
-	文字常量区:
-		int main() 
-		{ 
-			char *name = "fengkewei"; 
-			
-			char name1[] = "fengkewei"; 
-			
-			char *name2 = "fengkewei"; 
-			
-			char *name3 = "woaifengkewei";
-			
-			int i = 10; 
-			
-			int j = 10; 
-			
-			int k = 11;  
-			
-			return 0;
-		}
-		&name=0x0013ff5c unsigned char * *
-		name=0x004156b8 "fengkewei" unsigned char *
-		为什么&name与name的地址不同呢？
-			因为name是个字符型变量，该变量的空间分配在栈区，name指向的字符串在文字常量区，而name又是个字符型指针变量，
-			它里面所保存的值即为字符串在文字常量区的地址，这也就是为什么指针指向的内容和指针自身的地址不同的原因了。
+		实例解析char类型指针与其他类型指针的地址差异分析：
+			int main() 
+			{ 
+				char x[10]= "tanzheng";
+				char *x_pter=x;
+				int y[8]= { 2,4,6,8,10,12,14,16 };
+				int *y_pter=y;
+				
+				std::cout << "Value of x variable: ";
+				std::cout << x << std::endl;
+				
+				std::cout << "Value of &x[0] variable: ";
+				std::cout << &x[0] << std::endl;
+	
+				std::cout << "Value of (void *)x variable: ";
+				std::cout << (void *)x << std::endl;
+				
+				std::cout << "Value of &x variable: ";
+				std::cout << &x << std::endl;
+				
+				std::cout << "Value of (void *)x[0] variable: ";
+				std::cout << (void *)&x[0] << std::endl;
+				
+				std::cout << "Value of x_pter variable: ";
+				std::cout << x_pter << std::endl;
+				
+				std::cout << "Value of (void *)x_pter variable: ";
+				std::cout << (void *)x_pter << std::endl;
+				
+				std::cout << "Value of &x_pter variable: ";
+				std::cout << &x_pter << std::endl;
+				
+				std::cout << "Value of y variable: ";
+				std::cout << y << std::endl;
+				
+				std::cout << "Value of &y variable: ";
+				std::cout << &y << std::endl;
+				
+				std::cout << "Value of &y[0] variable: ";
+				std::cout << &y[0] << std::endl;
+				
+				std::cout << "Value of y_pter variable: ";
+				std::cout << y_pter << std::endl;
+				
+				std::cout << "Value of &y_pter variable: ";
+				std::cout << &y_pter << std::endl;
+				return 0;
+			}
+			Value of x variable: 							tanzheng
+			Value of &x[0] variable: 					tanzheng
+			Value of (void *)x variable:			00FEFE0C
+			Value of &x variable: 						00FEFE0C
+			Value of (void *)&x[0] variable: 	00FEFE0C
+			Value of x_pter variable: 				tanzheng
+			Value of (void *)x_pter variable: 00FEFE0C
+			Value of &x_pter variable: 				00FEFE00
+			Value of y variable: 							00FEFDD8
+			Value of &y variable: 						00FEFDD8
+			Value of &y[0] variable: 					00FEFDD8
+			Value of y_pter variable: 				00FEFDD8
+			Value of &y_pter variable: 				00FEFDCC
+			①为什么char指针类型的x取地址时,需强制转换(void *)类型？其他类型的指针变量取地址时不需要强制转换？
+				1.char*类型把字符串就是放在文字常量区，定义后不能修改且默认读取字符串数据，强制转换为(void *)类型，才能读取保存在文字常量区首地址。
+				2.其他类型的指针（例如short int、long int）可直接取指针变量的地址。
+			②指针变量有几种形态？
+				1.y表示指针y对应的内存空间（可以说就是指针本身的值）
+   			2.&y表示当前指针对应的内存空间的首地址（存放指针的地址）
+   			3.*y表示指针y所指向的变量对应的整个内存空间。（指针指向的空间）
+   	
+第五章
+91页
+	对衔接的思考
+		
