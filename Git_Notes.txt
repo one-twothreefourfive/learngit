@@ -1,11 +1,17 @@
 1.文本编辑的格式最好用UTF-8 without BOM编码，所有语言使用同一种编码，既没有冲突，又被所有平台所支持。
 2.千万不要使用Windows自带的记事本编辑任何文本文件。原因是Microsoft开发记事本的团队使用了一个非常弱智的行为来保存UTF-8编码的文件，他们自作聪明地在每个文件开头添加了0xefbbbf（十六进制）的字符，你会遇到很多不可思议的问题，比如，网页第一行可能会显示一个“?”，明明正确的程序一编译就报语法错误，等等。
 3.建议下载Notepad++代替记事本，不但功能强大，而且免费！记得把Notepad++的默认编码设置为‘UTF-8 without BOM’即可：
-4.创建版本库，这个仓库位于/Users/michael/learngit：
-	$ mkdir learngit
-	$ cd learngit
-	$ pwd
-	/Users/michael/learngit
+4.“Git Bash”安装配置
+		$ git config --global user.name "Your Name"
+		$ git config --global user.email "email@example.com"
+		因为Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。你也许会担心，如果有人故意冒充别人怎么办？
+		这个不必担心，首先我们相信大家都是善良无知的群众，其次，真的有冒充的也是有办法可查的。
+		注意git config命令的--global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址。
+	创建版本库，这个仓库位于/Users/michael/learngit：
+		$ mkdir learngit
+		$ cd learngit
+		$ pwd
+		/Users/michael/learngit
 5.通过git init命令把这个目录变成Git可以管理的仓库
 	$ git init
 	Initialized empty Git repository in /Users/michael/learngit/.git/
@@ -70,6 +76,11 @@
 			1.首先，登陆GitHub，然后，在右上角找到“Create a new repo”按钮，创建一个新的仓库：
 			2.在Repository name填入learngit，其他保持默认设置，点击“Create repository”按钮，就成功地创建了一个新的Git仓库：
 			3.在本地的learngit仓库下运行命令：$ git remote add origin git@github.com:one-twothreefourfive/learngit.git
+				如果命令提示fatal: remote origin already exists.，如下操作：
+				1)先删除远程 Git 仓库
+					$ git remote rm origin
+				2)再添加远程 Git 仓库
+					$ git remote add origin git@github.com:one-twothreefourfive/learngit.git
 			4.把本地库当前分支master的所有内容推送到远程库上：$ git push -u origin master
 			5.第一次推送后，后面的推送命令可省略-u：git push origin master
 			6.SSH警告：当你第一次使用Git的clone或者push命令连接GitHub时，会得到一个警告：
@@ -539,4 +550,8 @@
 					搭建Git服务器非常简单，通常10分钟即可完成；
 					要方便管理公钥，用Gitosis；
 					要像SVN那样变态地控制权限，用Gitolite。
-				
+					
+	附件（常用 Git 命令清单）
+		地址：http://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html
+		
+		
